@@ -36,3 +36,10 @@ CLI:
     usermod -aG docker jenkins
     systemctl restart jenkins
     
+Pipeline:
+
+Create pipeline for staging:
+    use StagingPipeline/Jenkinsfile
+
+Create pipeline for production:
+    use ProdPipeline/Jenkinsfile

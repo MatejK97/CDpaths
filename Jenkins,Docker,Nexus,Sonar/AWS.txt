@@ -9,6 +9,7 @@ Elastic Container Registry
     Private
 
 ECS:
+##Staging 
     Create Cluster
         ProjectStaging
         Monitoring enabled
@@ -37,4 +38,32 @@ ECS:
             Target group:
                 Name: projectStageTG
                 HTTP
-            
+
+##Production
+    Create Cluster
+        ProjectProduction
+        Monitoring enabled
+
+    Task definitions
+     Container 1:
+        project - ECR URI
+        8080
+        AWS Fargate
+    
+    Services:
+        Deploy
+            Lunch type
+            Family: projectProductionTask
+            Name: projectProductionTask
+            Networking:
+            Create SG:
+                HTTP 80 from anywhere
+            (After creating the service add custom port 8080)
+            Load balancing:
+            Application LB
+            Name: projectProductionLB
+            Target group:
+                Name: projectProductionTG
+                HTTP
+
+Create new git branch for production

@@ -24,7 +24,6 @@ pipline {
         SONARSCANNER = 'sonarscanner'
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
-        NEXUS_URL = "172.31.40.209:8081"
         NEXUS_REPOSITORY = "project-release"
         NEXUS_REPOGRP_ID = "project-grp-repo"
         NEXUS_CREDENTIAL_ID = "nexuslogin"
@@ -32,6 +31,8 @@ pipline {
         registryCredential = 'ecr:aws-region:awscreds'
         appRegistry = 'ECR URI'
         projectRegistry = 'https://ECR URI without reg name'
+        cluster = 'ProjectStaging'
+        service = 'projectStageTask'
     }
 
     stages {
@@ -91,7 +92,7 @@ pipline {
                 nexusArtifactUploader(
                     nexusVersion: "${NEXUS_VERSION}",
                     protocol: "${NEXUS_PROTOCOL}",
-                    nexusUrl: "${NEXUS_URL}",
+                    nexusUrl: "${NEXUSIP}:${NEXUSPORT}",
                     groupId: "${NEXUS_REPOGRP_ID}",
                     version: "${ARTVERSION}",
                     repository: "${NEXUS_REPOSITORY}",
