@@ -7,4 +7,34 @@ IAM user:
 
 Elastic Container Registry
     Private
+
+ECS:
+    Create Cluster
+        ProjectStaging
+        Monitoring enabled
+        Tags:
+        Name ProjectStaging
     
+    Task definitions
+        projectStageTask
+        Container 1:
+            project - ECR URI
+            8080
+        AWS Fargate
+
+    Services:
+        Deploy
+            Lunch type
+            Family: projectStageTask
+            Name: projectStageTask
+            Networking:
+            Create SG:
+                HTTP 80 from anywhere
+            (After creating the service add custom port 8080)
+            Load balancing:
+            Application LB
+            Name: projectStageLB
+            Target group:
+                Name: projectStageTG
+                HTTP
+            
