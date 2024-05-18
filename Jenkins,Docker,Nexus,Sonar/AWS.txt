@@ -1,0 +1,10 @@
+IAM user:
+    cicdjenkins
+    Access key
+    Policies:
+        AmazonEC2ContainerRegistryFullAccess
+        AmazonECS_FullAccess
+
+Elastic Container Registry
+    Private
+    

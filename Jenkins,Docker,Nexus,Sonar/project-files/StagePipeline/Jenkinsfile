@@ -26,9 +26,12 @@ pipline {
         NEXUS_PROTOCOL = "http"
         NEXUS_URL = "172.31.40.209:8081"
         NEXUS_REPOSITORY = "project-release"
-            NEXUS_REPOGRP_ID = "project-grp-repo"
+        NEXUS_REPOGRP_ID = "project-grp-repo"
         NEXUS_CREDENTIAL_ID = "nexuslogin"
         ARTVERSION = "${env.BUILD_ID}'${env.BUILD_TIMESTAMP}"
+        registryCredential = 'ecr:aws-region:awscreds'
+        appRegistry = 'ECR URI'
+        projectRegistry = 'https://ECR URI without reg name'
     }
 
     stages {
@@ -102,13 +105,32 @@ pipline {
                 );
             }
         }
+
+        stage('Build App Image') {
+            steps {
+                script {
+                    dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
+                }
+            }
+        }
+
+        stage('Upload App Image') {
+            steps {
+                script {
+                    docker.withRegistry( projectRegistry, registryCredential) {
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        }
     }
     post {
         always {
             echo 'Slack Notification.'
             slackSend channel: '#Jenkinscicd',
                 color: COLOR_MAP[currentBuild.currentResult],
-                message: "${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         }
     }
 }
